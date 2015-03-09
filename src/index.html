@@ -1,0 +1,111 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no" />
+<title>Portal Admin Helper</title>
+  <link rel="stylesheet" href="http://js.arcgis.com/3.13/esri/css/esri.css">
+  <link rel="stylesheet" href="http://js.arcgis.com/3.13/dijit/themes/nihilo/nihilo.css">
+  <link rel="stylesheet" href="libs/bootstrap-3.3.2/css/bootstrap.css" />
+  <!--<link rel="stylesheet" href="assets/css/bootstrapmap.css" />-->
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script>
+      var dojoConfig = { isDebug: false, parseOnLoad: true };
+  </script>
+  <script src="http://js.arcgis.com/3.13/"></script>
+  <script src="js/init.js"></script>
+</head>
+
+<body class="nihilo">
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <a id="projectTitle" class="navbar-brand" href="#">Dev Summit</a>
+      </div>
+      <div>
+        <ul id="navButtons" class="nav navbar-nav navButtons">
+          <li><a id="popItemsBtn" href=" #">Item Viewer</a></li>
+          <li><a id="popItemsGeoBtn" href="#">Item Geo</a></li>
+          <li><a id="punchCardBtn" href="#">Punch Card Viz</a></li>
+          <li><a id="tagMgrBtn" href="#">Tag Manager</a></li>
+          <li><a id="tagVizBtn" href="http://rigel.esri.com/dev/github/ds2015/d3-tag-viz/" target="_blank">Tag Relationship Viz</a></li>
+          <li><a id="svcHealthBtn" href="#">Service Health Monitor</a></li>
+          <li><a id="aoaBtn" href="https://ago-assistant.esri.com/" target="_blank">AGO Admin Asst</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1 id="appTitle"></h1>
+      <p id="appSubTitle"></p>
+      <div id="logInControlDiv" class="logInControlDiv">
+        <button id="signInBtn" type="submit" class="btn btn-success signInBtn">Sign In</button>
+        <button id="signOutBtn" type="submit" class="btn btn-warning signOutBtn">Sign Out</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="loggedInDiv" class=" row panel panel-default">
+      <div class="panel-body col-lg-12">
+
+        <div id="itemGalleryContainer" class="itemGalleryContainer">
+          <div class="btn-group" role="group" aria-label="...">
+            <button type="button" class="btn btn-success">Most Popular Items</button>
+            <button type="button" class="btn btn-default">Least Popular Items</button>
+            <button type="button" class="btn btn-default">Trending Items</button>
+            <button type="button" class="btn btn-default">Oldest Items</button>
+            <button type="button" class="btn btn-default">Newest Items</button>
+          </div>
+          <div style="padding-bottom: 25px;"></div>
+          <div id="itemGallery" class="esri-item-gallery" style="margin-left: 25px;"></div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div id="itemReviewerContainer" class="itemReviewerContainer">
+          <h2>Item Geo Viz</h2>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div id="punchCardContainer" class="punchCardContainer">
+          <h2>Punch Card Viz</h2>
+          <div id="punchCardChartDiv" style="height: 400px; width: 950px;"></div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div id="tagMgrContainer" class="tagMgrContainer">
+          <h2>Tag Manager App</h2>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+  <!--
+    <div id="loggedInDiv" class="row loggedInDiv">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <h3 id="serverUrl"></h3>
+          <p id="userName"></p>
+          <p id="createTime"></p>
+          <p id="expireTime"></p>
+          <p id="isSSL"></p>
+          <p id="myToken"></p>
+        </div>
+      </div>
+    </div>
+  -->
+
+
+</body>
+</html>

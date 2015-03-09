@@ -1,0 +1,104 @@
+﻿/* css for app */
+
+  html, body {
+    font-family: Lucida Sans, Lucida Grande, Arial !important;
+    font-size: 14px;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .logInControlDiv {
+    height: 35px;
+  }
+
+  .signInBtn {
+    display: none;
+  }
+
+  .signOutBtn {
+    display: none;
+  }
+
+  .loggedInDiv{
+    opacity: 0;
+  }
+
+  .panel-body{
+    font-weight: bold;
+  }
+
+  .panel-body span{
+    font-weight: normal;
+    color: #808080;
+    overflow-wrap: break-word;
+  }
+
+  .esri-item-gallery .esri-item-container {
+    float: left;
+    text-align: center;
+    padding: 10px;
+    width: 204px;
+    display: inline-block;
+  }
+
+  .esri-item-gallery .esri-image {
+    width: 200px;
+    height: 133px;
+    border: 2px solid gray;
+    border-radius: 5px;
+  }
+
+  .esri-item-gallery .esri-null-image {
+    line-height: 133px;
+    text-align: center;
+    color: #999999;
+  }
+
+  .esri-item-gallery .esri-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .esri-item-gallery .esri-null-title {
+    color: #999999;
+  }
+
+  .action {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .userId{
+    font-weight: bold;
+  }
+
+  .itemGalleryContainer{
+    display: none;
+    text-align: center;
+  }
+
+  .itemReviewerContainer{
+    display: none;
+  }
+
+  .punchCardContainer{
+    display: none;
+  }
+
+  .tagMgrContainer{
+    display: none;
+  }
+
+  .navButtons{
+    opacity: 0;
+  }
+
+  .chartTip{
+  text-align: center;
+  font-family: 'Lucida Grande', 'Segoe UI', 'Arial', sans-serif;
+  font-size: 1.2em;
+}
