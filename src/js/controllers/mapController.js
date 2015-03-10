@@ -134,6 +134,10 @@
     return centerPt;
   };
 
+  map.updateLayerState = function (layerStateObj) {
+    console.log(layerStateObj);
+  };
+
 
 
   return map;

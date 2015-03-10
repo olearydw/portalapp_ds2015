@@ -291,6 +291,10 @@
 
   function handleLayerInputClick(e) {
     console.log(e.target.id, e.target.checked);
+    var layerStateObj = {};
+    layerStatObj.id = e.target.id;
+    layerstatObj.show = e.target.checked;
+    mapController.updateLayerState(layerStateObj);
   };
 
 });
