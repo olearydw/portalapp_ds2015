@@ -45,6 +45,8 @@
     on(dom.byId("signInBtn"), "click", handleSignIn);
     on(dom.byId("signOutBtn"), "click", handleSignOut);
     on(dom.byId("navButtons"), "click", handleNavClick);
+    on(dom.byId("polyLayer"), "click", handleLayerInputClick);
+    on(dom.byId("pointLayer"), "click", handleLayerInputClick);
   };
 
 
@@ -285,6 +287,10 @@
         ]
     });
     callback(true);
+  };
+
+  function handleLayerInputClick(e) {
+    console.log(e.target.id, e.target.checked);
   };
 
 });
