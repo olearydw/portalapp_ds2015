@@ -82,10 +82,7 @@
       titleFont: "normal normal normal 1.25em 'Lucida Grande', 'Segoe UI', 'Arial', sans-serif"
       //titleFontColor: "orange"
     });
-
     pcChart.setTheme(theme);
-
-
     pcChart.addPlot("default", {
       type: "Bubble"
     });
@@ -99,8 +96,7 @@
         stroke: { color: '#F2F2F2', width: 1 },
         minorTicks: true,
         minorLabels: true,
-        minorTick: { length: 10, color: "#FFFFFF" },
-        majorTick: { length: 10, color: "#FFFFFF" },
+        minorTick: { length: 10, color: "#FFFFFF" }
         //max: (xValues.length + .50)
       });
 

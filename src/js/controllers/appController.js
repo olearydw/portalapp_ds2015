@@ -11,10 +11,11 @@
   "utils/chartsmodule",
   "controllers/viewController",
   "controllers/portalController",
+  "controllers/mapController",
   "models/modelmodule",
   "config/config",
   "dojo/domReady!"
-], function (ready, domStyle, domAttr, dom, on, array, Memory, loginmodule, datesmodule, chartsmodule, viewController, portalController, modelmodule, config) {
+], function (ready, domStyle, domAttr, dom, on, array, Memory, loginmodule, datesmodule, chartsmodule, viewController, portalController, mapController, modelmodule, config) {
 
   var punchCardDataStore = [];
   var dayStringLookupStore;
@@ -33,7 +34,6 @@
 
     });
     doSetEventHandlers();
-    
     doCreateDayStringValStore(function(val){
       if (val) {
         doCreatePunchCardDataStoreTemplate();
@@ -69,10 +69,67 @@
   };
 
   function getUserItems() {
-    portalController.getUsersItems(function (items) {
-      console.log(items);
-      viewController.doCreateItemGallery(items.results);
+    var orgId = portalController.getPortalOrgId();
+    var endDate = datesmodule.getTodayValue();
+    var startDate = datesmodule.getDateFromDaysAgo(config.punchCardDaysAgoVal);
+    endDate = "000000" + Math.floor(endDate.getTime() / 1000);
+    startDate = "000000" + Math.floor(startDate.getTime() / 1000);
+
+    var qParams = {
+      //q: "owner:" + pObj.user.username,
+      q: 'modified:[' + startDate + ' TO ' + endDate + '] AND accountid:' + orgId,
+      t: 'content',
+      start: 1,
+      num: 100,
+      f: 'json',
+      sortField: "numViews",
+      sortOrder: "desc"
+    };
+
+    portalController.getItems(qParams, function (itemsArr) {
+      viewController.doCreateItemGallery(itemsArr);
     });
+  };
+
+  function getItemsForMap() {
+    var orgId = portalController.getPortalOrgId();
+    var endDate = datesmodule.getTodayValue();
+    var startDate = datesmodule.getDateFromDaysAgo(config.punchCardDaysAgoVal);
+    endDate = "000000" + Math.floor(endDate.getTime() / 1000);
+    startDate = "000000" + Math.floor(startDate.getTime() / 1000);
+
+    var qParams = {
+      q: 'modified:[' + startDate + ' TO ' + endDate + '] AND accountid:' + orgId,
+      t: 'content',
+      start: 1,
+      num: 100,
+      f: 'json',
+      sortOrder: 'asc',
+      sortField: 'type'
+    };
+
+    portalController.getPortalMapInfo(function (mapId) {
+      mapController.createMap("mapDiv", mapId);
+    });
+
+    portalController.getItems(qParams, function (itemsArr) {
+      //console.log(itemsArr.length);
+      getItemsWithGeoExtent(itemsArr);
+    });
+  };
+
+  function getItemsWithGeoExtent(itemsArr) {
+    var itemsWithExtentsArr = [];
+
+    if (itemsArr.length > 0) {
+      array.forEach(itemsArr, function (item) {
+        if (item.extent.length === 2) {
+          itemsWithExtentsArr.push({ 'extent': item.extent, 'id': item.id, 'type': item.type, 'access': item.access, 'thumbnailUrl': item.thumbnailUrl });
+        };
+      });
+      mapController.addExtentsToMap(itemsWithExtentsArr);
+    };
+    
   };
 
   function getItemsForPunchCard() {
@@ -92,8 +149,7 @@
       sortField: 'type'
     };
 
-    portalController.getPunchcardItems(qParams, function (itemsArr) {
-      console.log(itemsArr.length);
+    portalController.getItems(qParams, function (itemsArr) {
       doCreatePunchValues(itemsArr);
     });
 
@@ -110,10 +166,6 @@
       cardVal.h = hr;
       punchCardValueStore.push(cardVal);
     });
-
-    //console.log(punchCardValueStore.length);
-    //console.log(punchCardValueStore);
-
     doPunchCardMixin(punchCardValueStore);
   };
 
@@ -121,19 +173,13 @@
     array.forEach(punchCardValuesArr, function (item, index) {
       var day = item.d;
       var hr = item.h;
-      //console.log(day, hr);
-
       array.forEach(punchCardDataStore, function (cardValue) {
 
         if (day === cardValue.d && hr === cardValue.hour) {
           cardValue.count = cardValue.count + 1;
-          //console.log(cardValue);
         };
-
       });
-
     });
-
     chartsmodule.getItemPunchCardChart(punchCardDataStore, "punchCardChartDiv");
   };
 
@@ -195,10 +241,17 @@
   };
 
   function handleActiveViewCreation(divId) {
+    //console.log(divId);
     if (divId === "itemGalleryContainer") {
       getUserItems();
     } else if (divId === "punchCardContainer") {
       getItemsForPunchCard();
+    } else if (divId === "tagMgrContainer") {
+      console.log('show tag manager');
+    } else if (divId === "itemReviewerContainer") {
+      getItemsForMap();
+    } else {
+      console.log('divid not found', divId);
     };
 
   };

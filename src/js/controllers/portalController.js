@@ -13,7 +13,7 @@
 
 
   ready(function () {
-    console.log('portal module ready');
+    //console.log('portal module ready');
   });
 
   portal.getPortalObject = function () {
@@ -25,7 +25,6 @@
     on(p, 'load', function(){
       p.signIn().then(function (portalUser) {
         pObj = portalUser.portal;
-        console.log(pObj);
       });
     });
   };
@@ -64,15 +63,37 @@
 
       });
     };
+  };
 
-    
-    
+  portal.getItems = function (qParams, callback) {
+    var itemsRespArr = [];
+    var params = qParams;
+    doQueryItems(params);
 
+    function doQueryItems(params) {
+      p.queryItems(params)
+      .then(function (items) {
+        array.forEach(items.results, function (item) {
+          itemsRespArr.push(item);
+        });
+
+        if (items.nextQueryParams.start > -1) {
+          doQueryItems(items.nextQueryParams);
+        } else {
+          callback(itemsRespArr);
+        };
+
+      });
+    };
 
   };
 
   portal.getPortalOrgId = function () {
     return pObj.id;
+  };
+
+  portal.getPortalMapInfo = function (callback) {
+    callback(pObj.defaultBasemap.id);
   };
 
 

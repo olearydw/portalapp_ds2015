@@ -63,7 +63,7 @@
   };
 
   view.doShowNavButtons = function () {
-    console.log('set opacity of nav');
+    //console.log('set opacity of nav');
     domStyle.set("navButtons", "opacity", 1);
   };
 

@@ -102,3 +102,10 @@
   font-family: 'Lucida Grande', 'Segoe UI', 'Arial', sans-serif;
   font-size: 1.2em;
 }
+
+  #mapDiv {
+   height: 400px;
+   width: 100%;
+   margin: 0;
+   padding: 0;
+  }

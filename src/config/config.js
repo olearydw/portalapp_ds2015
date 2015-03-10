@@ -4,5 +4,5 @@ define({
   "portalUrl": "https://www.arcgis.com",
   "appTitle": "Portal Admin Helper",
   "appSubtitle": "A lightweight helper app for administering a WebGIS configuration using the ArcGIS Portal API",
-  "punchCardDaysAgoVal": 14
+  "punchCardDaysAgoVal": 60
 });
