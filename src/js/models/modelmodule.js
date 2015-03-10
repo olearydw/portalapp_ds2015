@@ -1,10 +1,13 @@
 ﻿define([
-  "dojo/ready"
-], function (ready) {
+  "dojo/ready",
+  "dojo/store/Memory",
+  "dojo/_base/array"
+], function (ready, Memory, array) {
 
   var model = {};
   var credentialObj = {};
   var activeDiv = "";
+  var orgItemsStore;
 
 
 
@@ -38,6 +41,12 @@
     if (credentialObj) {
       return credentialObj.server;
     };
+  };
+
+  model.setItemsStore = function (itemsArr, callback) {
+    console.log('store fired');
+    itemsStore = new Memory({ data: itemsArr, idProperty: 'id' });
+    callback(itemsStore.data);
   };
 
   /*

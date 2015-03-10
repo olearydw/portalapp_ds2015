@@ -19,6 +19,7 @@
 
   var punchCardDataStore = [];
   var dayStringLookupStore;
+  var limit = config.itemCountLimit;
 
   ready(function () {
     loginmodule.doCheckLoginStatus(function (loggedIn) {
@@ -47,6 +48,7 @@
     on(dom.byId("navButtons"), "click", handleNavClick);
     on(dom.byId("polyLayer"), "click", handleLayerInputClick);
     on(dom.byId("pointLayer"), "click", handleLayerInputClick);
+    on(dom.byId("btnGrpDiv"), "click", handleItemsViewBtnClick);
   };
 
 
@@ -87,11 +89,22 @@
       sortField: "numViews",
       sortOrder: "desc"
     };
+    getItemsForGalleryView(qParams);
+  };
 
-    portalController.getItems(qParams, function (itemsArr) {
-      viewController.doCreateItemGallery(itemsArr);
+
+
+
+  function getItemsForGalleryView(qParams) {
+    portalController.getItems(qParams, limit, function (itemsArr) {
+      modelmodule.setItemsStore(itemsArr, function (data) {
+        console.log('items now in store');
+        viewController.doCreateItemGallery(data);
+      });
+
     });
   };
+
 
   function getItemsForMap() {
     var orgId = portalController.getPortalOrgId();
@@ -114,7 +127,7 @@
       mapController.createMap("mapDiv", mapId);
     });
 
-    portalController.getItems(qParams, function (itemsArr) {
+    portalController.getItems(qParams, limit, function (itemsArr) {
       //console.log(itemsArr.length);
       getItemsWithGeoExtent(itemsArr);
     });
@@ -151,7 +164,7 @@
       sortField: 'type'
     };
 
-    portalController.getItems(qParams, function (itemsArr) {
+    portalController.getItems(qParams, limit, function (itemsArr) {
       doCreatePunchValues(itemsArr);
     });
 
@@ -245,7 +258,8 @@
   function handleActiveViewCreation(divId) {
     //console.log(divId);
     if (divId === "itemGalleryContainer") {
-      getUserItems();
+      //getUserItems();
+
     } else if (divId === "punchCardContainer") {
       getItemsForPunchCard();
     } else if (divId === "tagMgrContainer") {
@@ -290,11 +304,71 @@
   };
 
   function handleLayerInputClick(e) {
-    console.log(e.target.id, e.target.checked);
     var layerStateObj = {};
-    layerStatObj.id = e.target.id;
-    layerstatObj.show = e.target.checked;
+    layerStateObj.id = e.target.id;
+    layerStateObj.show = e.target.checked;
     mapController.updateLayerState(layerStateObj);
+  };
+
+  function handleItemsViewBtnClick(e) {
+    console.log(e.target.id);
+    var selectedId = e.target.id;
+    var qParams;
+
+    var orgId = portalController.getPortalOrgId();
+    var endDate = datesmodule.getTodayValue();
+    var startDate = datesmodule.getDateFromDaysAgo(config.punchCardDaysAgoVal);
+    endDate = "000000" + Math.floor(endDate.getTime() / 1000);
+    startDate = "000000" + Math.floor(startDate.getTime() / 1000);
+
+    qParams = {
+      q: 'modified:[' + startDate + ' TO ' + endDate + '] AND accountid:' + orgId,
+      t: 'content',
+      start: 1,
+      num: 100,
+      f: 'json',
+      sortField: "numViews",
+      sortOrder: "desc"
+    };
+
+    switch (selectedId) {
+      case "recentBtn":
+        qParams.q = 'modified:[' + startDate + ' TO ' + endDate + '] AND accountid:' + orgId;
+        qParams.sortField = "numViews";
+        qParams.sortOrder = "desc";
+        break;
+      case "popBtn":
+        qParams.q = 'accountid:' + orgId;
+        qParams.sortField = "numViews";
+        qParams.sortOrder = "desc";
+        break;
+      case "lessPopBtn":
+        qParams.q = 'accountid:' + orgId;
+        qParams.sortField = "numViews";
+        qParams.sortOrder = "asc";
+        break;
+      case "trendBtn":
+        qParams.q = 'accountid:' + orgId;
+        qParams.sortField = "numViews";
+        qParams.sortOrder = "desc";
+        break;
+      case "oldBtn":
+        qParams.q = 'accountid:' + orgId;
+        qParams.sortField = "created";
+        qParams.sortOrder = "asc";
+        break;
+      case "newBtn":
+        qParams.q = 'accountid:' + orgId;
+        qParams.sortField = "created";
+        qParams.sortOrder = "desc";
+        break;
+    }
+
+    //console.log(qParams);
+    getItemsForGalleryView(qParams);
+
+
+
   };
 
 });

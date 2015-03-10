@@ -99,43 +99,33 @@
 
       extentsGraphicsLayer.add(extentGraphic);
       extentsCenterPointGraphicsLayer.add(extentCenterGraphic);
-
-      console.log('loop iterated');
     });
 
-    console.log('loop done');
-
-    console.log(heatmapRenderer);
-
     extentsCenterPointGraphicsLayer.setRenderer(heatmapRenderer);
-
-    console.log(extentsCenterPointGraphicsLayer);
-
     itemsMap.addLayer(extentsGraphicsLayer);
     itemsMap.addLayer(extentsCenterPointGraphicsLayer);
-
-    console.log('layer added to map');
-    //extentsCenterPointGraphicsLayer.redraw();
-
-
-    console.log(itemsMap);
-    console.log(itemsMap.graphicsLayerIds);
-
-
-    extentsGraphicsLayer.hide();
-
-
-
+    extentsCenterPointGraphicsLayer.hide();
   };
 
+  map.updateLayerState = function (layerStateObj) {
+    if(layerStateObj.id === "polyLayer"){
+      if(layerStateObj.show){
+        extentsGraphicsLayer.show();
+      } else {
+        extentsGraphicsLayer.hide();
+      }
+    } else {
+      if(layerStateObj.show){
+        extentsCenterPointGraphicsLayer.show();
+      } else {
+        extentsCenterPointGraphicsLayer.hide();
+      }
+    }
+  };
 
   function calcCenterPoint(extentObj) {
     var centerPt = extentObj.getCenter();
     return centerPt;
-  };
-
-  map.updateLayerState = function (layerStateObj) {
-    console.log(layerStateObj);
   };
 
 

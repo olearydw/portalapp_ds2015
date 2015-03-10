@@ -33,6 +33,7 @@
   };
 
   view.doCreateItemGallery = function (items) {
+    console.log('creating gallery view now');
     var htmlGallery = "";
     array.forEach(items, function (item) {
       htmlGallery += (
@@ -49,6 +50,7 @@
         ) +
         "</div>"
         );
+      console.log('ready to render galler');
       dom.byId("itemGallery").innerHTML = htmlGallery;
     });
   };

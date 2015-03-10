@@ -54,13 +54,13 @@
       <div class="panel-body col-lg-12">
 
         <div id="itemGalleryContainer" class="itemGalleryContainer">
-          <div class="btn-group" role="group" aria-label="...">
-            <button type="button" class="btn btn-success">Recent Items</button>
-            <button type="button" class="btn btn-default">Most Popular Items</button>
-            <button type="button" class="btn btn-default">Least Popular Items</button>
-            <button type="button" class="btn btn-default">Trending Items</button>
-            <button type="button" class="btn btn-default">Oldest Items</button>
-            <button type="button" class="btn btn-default">Newest Items</button>
+          <div id="btnGrpDiv" class="btn-group" role="group" aria-label="...">
+            <button id="recentBtn" type="button" class="btn btn-default">Recent Items</button>
+            <button id="popBtn" type="button" class="btn btn-default">Most Popular Items</button>
+            <button id="lessPopBtn" type="button" class="btn btn-default">Least Popular Items</button>
+            <button id="trendBtn" type="button" class="btn btn-default">Trending Items</button>
+            <button id="oldBtn" type="button" class="btn btn-default">Oldest Items</button>
+            <button id="newBtn" type="button" class="btn btn-default">Newest Items</button>
           </div>
           <div style="padding-bottom: 25px;"></div>
           <div id="itemGallery" class="esri-item-gallery" style="margin-left: 25px;"></div>
@@ -76,7 +76,7 @@
           <div class="col-md-4">
             <div class="checkbox">
               <label>
-                <input id="polyLayer" type="checkbox" value="poly">
+                <input id="polyLayer" type="checkbox" value="poly" checked>
                 Poly
               </label>
             </div>

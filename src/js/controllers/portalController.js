@@ -65,9 +65,14 @@
     };
   };
 
-  portal.getItems = function (qParams, callback) {
+  portal.getItems = function (qParams, numItems, callback) {
     var itemsRespArr = [];
     var params = qParams;
+
+    if (numItems < 100) {
+      params.num = numItems;
+    };
+
     doQueryItems(params);
 
     function doQueryItems(params) {
@@ -77,7 +82,7 @@
           itemsRespArr.push(item);
         });
 
-        if (items.nextQueryParams.start > -1) {
+        if (items.nextQueryParams.start > -1 && items.nextQueryParams.start < numItems ) {
           doQueryItems(items.nextQueryParams);
         } else {
           callback(itemsRespArr);
