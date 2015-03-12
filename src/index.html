@@ -12,8 +12,7 @@
   <script>
       var dojoConfig = { isDebug: false, parseOnLoad: true };
   </script>
-  <script src="http://js.arcgis.com/3.13/"></script>
-  <script src="js/init.js"></script>
+  
 </head>
 
 <body class="nihilo">
@@ -28,11 +27,11 @@
       </div>
       <div>
         <ul id="navButtons" class="nav navbar-nav navButtons">
-          <li><a id="popItemsBtn" href=" #">Item Viewer</a></li>
-          <li><a id="popItemsGeoBtn" href="#">Item Geo</a></li>
-          <li><a id="punchCardBtn" href="#">Punch Card Viz</a></li>
+          <li><a id="popItemsBtn" href=" #">Item Gallery</a></li>
+          <li><a id="popItemsGeoBtn" href="#">Item GeoView</a></li>
+          <li><a id="punchCardBtn" href="#">Workforce Punch Card</a></li>
           <li><a id="tagMgrBtn" href="#">Tag Manager</a></li>
-          <li><a id="tagVizBtn" href="http://rigel.esri.com/dev/github/ds2015/d3-tag-viz/" target="_blank">Tag Relationship Viz</a></li>
+          <li><a id="tagVizBtn" href="http://rigel.esri.com/dev/github/ds2015/d3-tag-viz/" target="_blank">Tag Relationships</a></li>
           <li><a id="svcHealthBtn" href="#">Service Health Monitor</a></li>
           <li><a id="aoaBtn" href="https://ago-assistant.esri.com/" target="_blank">AGO Admin Asst</a></li>
         </ul>
@@ -48,7 +47,6 @@
         <button id="signInBtn" type="submit" class="btn btn-success signInBtn">Sign In</button>
         <button id="signOutBtn" type="submit" class="btn btn-warning signOutBtn">Sign Out</button>
       </div>
-
     </div>
   </div>
 
@@ -113,22 +111,7 @@
     </div>
   </div>
 
-
-  <!--
-    <div id="loggedInDiv" class="row loggedInDiv">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <h3 id="serverUrl"></h3>
-          <p id="userName"></p>
-          <p id="createTime"></p>
-          <p id="expireTime"></p>
-          <p id="isSSL"></p>
-          <p id="myToken"></p>
-        </div>
-      </div>
-    </div>
-  -->
-
-
+  <script src="http://js.arcgis.com/3.13/"></script>
+  <script src="js/init.js"></script>
 </body>
 </html>

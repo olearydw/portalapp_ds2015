@@ -28,7 +28,7 @@
         var configUrl = modelmodule.getConfigPortalUrl();
         viewController.doShowNavButtons();
         portalController.createPortalObj(configUrl, function (portalObj) {
-          console.log('PORTAL CREATED');
+          //console.log('PORTAL CREATED');
         });
       };
 
@@ -62,7 +62,7 @@
       if (loggedIn) {
         var configUrl = modelmodule.getConfigPortalUrl();
         portalController.createPortalObj(configUrl, function (portalObj) {
-          console.log('PORTAL CREATED');
+          //console.log('PORTAL CREATED');
         });
       };
 
@@ -101,7 +101,7 @@
   function getItemsForGalleryView(qParams) {
     portalController.getItems(qParams, limit, function (itemsArr) {
       modelmodule.setItemsStore(itemsArr, function (data) {
-        console.log('items now in store');
+        //console.log('items now in store');
         viewController.doCreateItemGallery(data);
       });
 
@@ -268,11 +268,11 @@
     } else if (divId === "punchCardContainer") {
       getItemsForPunchCard();
     } else if (divId === "tagMgrContainer") {
-      console.log('show tag manager');
+      //console.log('show tag manager');
     } else if (divId === "itemReviewerContainer") {
       getItemsForMap();
     } else {
-      console.log('divid not found', divId);
+      //console.log('divid not found', divId);
     };
 
   };
@@ -316,7 +316,7 @@
   };
 
   function handleItemsViewBtnClick(e) {
-    console.log(e.target.id);
+    //console.log(e.target.id);
     var selectedId = e.target.id;
     var qParams;
 
@@ -376,9 +376,9 @@
 
 
   function handleGalleryItemClick(e) {
-    console.log(e.target.parentElement.id);
+    //console.log(e.target.parentElement.id);
     modelmodule.getThumbnailInfo(e.target.parentElement.id, function (data) {
-      console.log(data);
+      //console.log(data);
       viewController.doCreateItemGallery(data);
     });
 

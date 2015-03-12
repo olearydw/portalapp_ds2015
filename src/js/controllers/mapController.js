@@ -23,19 +23,12 @@
   var map = {};
   var itemsMap;
   var itemsMapInitExtent;
-
   var extentSymbol;
   var extentsGraphicsLayer = new GraphicsLayer();
-
   var extentCenterSymbol;
   var extentsCenterPointGraphicsLayer = new GraphicsLayer();
-
-
   var spatialReference = new SpatialReference({ wkid: 4326 });
-
   var heatmapRenderer;
-
-  //var heatmapRenderer = new HeatmapRenderer();
 
   ready(function () {
     heatmapRenderer = new HeatmapRenderer({
@@ -54,9 +47,7 @@
       itemsMapInitExtent = new Extent(response.itemInfo.itemData.baseMap.baseMapLayers[0].resourceInfo.initialExtent);
       itemsMap = response.map;
       itemsMap.setExtent(itemsMapInitExtent);
-      itemsMap.on("extent-change", extentChangeHandler);
-      //itemsMap.addLayer(extentsGraphicsLayer);
-      //itemsMap.addLayer(extentsCenterPointGraphicsLayer);
+      //itemsMap.on("extent-change", extentChangeHandler);
       callback(true);
     });
 
@@ -86,8 +77,7 @@
       new Color([0, 185, 242])
     );
     */
-
-    var pointSymbol = new PictureMarkerSymbol('../src/assets/img/iMapPin.png', 12, 24);
+    var pointSymbol = new PictureMarkerSymbol('../src/assets/img/iMapPin.png', 12, 25);
 
     return pointSymbol;
   };
@@ -139,7 +129,6 @@
     var centerPt = extentObj.getCenter();
     return centerPt;
   };
-
 
 
   return map;
