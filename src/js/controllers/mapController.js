@@ -14,10 +14,11 @@
 	"esri/symbols/SimpleFillSymbol",
 	"esri/symbols/SimpleLineSymbol",
   "esri/symbols/SimpleMarkerSymbol",
+  "esri/symbols/PictureMarkerSymbol",
   "esri/renderers/HeatmapRenderer",
   "esri/styles/heatmap",
 	"esri/layers/ArcGISTiledMapServiceLayer",
-], function (ready, array, on, Color, Map, arcgisUtils, GraphicsLayer, SpatialReference, Graphic, Geometry, Extent, Polygon, SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, HeatmapRenderer, esriStylesHeatmap, ArcGISTiledMapServiceLayer) {
+], function (ready, array, on, Color, Map, arcgisUtils, GraphicsLayer, SpatialReference, Graphic, Geometry, Extent, Polygon, SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, PictureMarkerSymbol, HeatmapRenderer, esriStylesHeatmap, ArcGISTiledMapServiceLayer) {
 
   var map = {};
   var itemsMap;
@@ -34,7 +35,7 @@
 
   var heatmapRenderer;
 
-  var heatmapRenderer = new HeatmapRenderer();
+  //var heatmapRenderer = new HeatmapRenderer();
 
   ready(function () {
     heatmapRenderer = new HeatmapRenderer({
@@ -45,7 +46,7 @@
     });
   });
 
-  map.createMap = function (divId, mapId) {
+  map.createMap = function (divId, mapId, callback) {
     extentSymbol = createExtentSymbol();
     extentCenterSymbol = createExtentCenterSymbol();
 
@@ -56,7 +57,7 @@
       itemsMap.on("extent-change", extentChangeHandler);
       //itemsMap.addLayer(extentsGraphicsLayer);
       //itemsMap.addLayer(extentsCenterPointGraphicsLayer);
-
+      callback(true);
     });
 
   };
@@ -68,15 +69,26 @@
   function createExtentSymbol() {
     var sls;
     var sfs;
-    sls = new SimpleLineSymbol('solid', new Color([225, 107, 23]), 1.00);
-    sfs = new SimpleFillSymbol('solid', sls, new Color([225, 107, 23, 0.04]));
+    sls = new SimpleLineSymbol('solid', new Color([225, 107, 23]), 0.06);
+    sfs = new SimpleFillSymbol('solid', sls, new Color([225, 107, 23, 0.02]));
     return sfs;
   };
 
   function createExtentCenterSymbol() {
-    var pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 12,
+    /*
+    var pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 10,
          new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 128, 0]), 4)
         );
+    
+    var pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE, 10,
+      new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+      new Color([0, 0, 0]), 1),
+      new Color([0, 185, 242])
+    );
+    */
+
+    var pointSymbol = new PictureMarkerSymbol('../src/assets/img/iMapPin.png', 12, 24);
+
     return pointSymbol;
   };
 
@@ -93,8 +105,8 @@
       extentGraphic.setSymbol(extentSymbol);
 
       var centerPt = calcCenterPoint(extent);
-      var extentCenterGraphic = new Graphic();
-      extentCenterGraphic.setGeometry(centerPt);
+      var extentCenterGraphic = new Graphic(centerPt);
+      //extentCenterGraphic.setGeometry(centerPt);
       extentCenterGraphic.setSymbol(extentCenterSymbol);
 
       extentsGraphicsLayer.add(extentGraphic);

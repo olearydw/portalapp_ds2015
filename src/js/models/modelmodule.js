@@ -9,6 +9,8 @@
   var activeDiv = "";
   var orgItemsStore;
 
+  var orgThumbnail = "https://dl.dropboxusercontent.com/u/7480869/bckgrd.jpg";
+
 
 
 
@@ -46,6 +48,20 @@
   model.setItemsStore = function (itemsArr, callback) {
     console.log('store fired');
     itemsStore = new Memory({ data: itemsArr, idProperty: 'id' });
+    callback(itemsStore.data);
+  };
+
+  model.getThumbnailInfo = function (iid, callback) {
+    var itemInfo = itemsStore.query({ id: iid });
+    var itemObj = itemInfo[0];
+    //var tUrl = orgThumbnail;
+    //var iTitle = itemObj.title;
+    itemObj.thumbnailUrl = orgThumbnail;
+
+
+    itemsStore.put(itemInfo, { overwrite: true });
+    //itemsStore.put({ id: iid, title: iTitle });
+
     callback(itemsStore.data);
   };
 

@@ -49,6 +49,9 @@
     on(dom.byId("polyLayer"), "click", handleLayerInputClick);
     on(dom.byId("pointLayer"), "click", handleLayerInputClick);
     on(dom.byId("btnGrpDiv"), "click", handleItemsViewBtnClick);
+    on(dom.byId("itemGallery"), "click", handleGalleryItemClick);
+
+    handleGalleryItemClick
   };
 
 
@@ -124,13 +127,15 @@
     };
 
     portalController.getPortalMapInfo(function (mapId) {
-      mapController.createMap("mapDiv", mapId);
+      mapController.createMap("mapDiv", mapId, function (mapReady) {
+        portalController.getItems(qParams, limit, function (itemsArr) {
+          //console.log(itemsArr.length);
+          getItemsWithGeoExtent(itemsArr);
+        });
+      });
     });
 
-    portalController.getItems(qParams, limit, function (itemsArr) {
-      //console.log(itemsArr.length);
-      getItemsWithGeoExtent(itemsArr);
-    });
+    
   };
 
   function getItemsWithGeoExtent(itemsArr) {
@@ -367,8 +372,19 @@
     //console.log(qParams);
     getItemsForGalleryView(qParams);
 
-
-
   };
+
+
+  function handleGalleryItemClick(e) {
+    console.log(e.target.parentElement.id);
+    modelmodule.getThumbnailInfo(e.target.parentElement.id, function (data) {
+      console.log(data);
+      viewController.doCreateItemGallery(data);
+    });
+
+
+    
+  };
+
 
 });

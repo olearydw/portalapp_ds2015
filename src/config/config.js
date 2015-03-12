@@ -5,5 +5,5 @@ define({
   "appTitle": "Portal Admin Helper",
   "appSubtitle": "A lightweight helper app for administering a WebGIS configuration using the ArcGIS Portal API",
   "punchCardDaysAgoVal": 60,
-  "itemCountLimit": 100
+  "itemCountLimit": 200
 });

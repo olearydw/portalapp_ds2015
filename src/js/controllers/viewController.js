@@ -37,7 +37,8 @@
     var htmlGallery = "";
     array.forEach(items, function (item) {
       htmlGallery += (
-        "<div class=\"esri-item-container\">" +
+        //"<div class=\"esri-item-container\">" +
+        "<div id=\"" + item.id + "\" class=\"esri-item-container\">" +
         (
           item.thumbnailUrl ?
           "<div class=\"esri-image\" style=\"background-image:url(" + item.thumbnailUrl + ");\"></div>" :
@@ -52,6 +53,7 @@
         );
       console.log('ready to render galler');
       dom.byId("itemGallery").innerHTML = htmlGallery;
+
     });
   };
 
