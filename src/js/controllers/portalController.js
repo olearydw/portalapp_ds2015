@@ -2,8 +2,11 @@
   "dojo/ready",
   "dojo/on",
   "dojo/_base/array",
-  "esri/arcgis/Portal"
-], function (ready, on, array, esriPortal) {
+  "esri/arcgis/Portal",
+  "esri/request",
+  "esri/config",
+  "config/config"
+], function (ready, on, array, esriPortal, esriRequest, esriConfig, config) {
 
   var portal = { };
   var pObj;
@@ -25,6 +28,7 @@
     on(p, 'load', function(){
       p.signIn().then(function (portalUser) {
         pObj = portalUser.portal;
+        esriConfig.defaults.io.corsEnabledServers.push( pObj.urlKey + "." + pObj.customBaseUrl );
       });
     });
   };
@@ -90,7 +94,6 @@
 
       });
     };
-
   };
 
   portal.getPortalOrgId = function () {
@@ -101,6 +104,46 @@
     callback(pObj.defaultBasemap.id);
   };
 
+  portal.getBaseUrl = function () {
+    return pObj.urlKey + "." + pObj.customBaseUrl;
+  }
+
+  portal.updateItemThumbnail = function (itemId, itemObj) {
+    var updateItemUrl;
+    var tagsArr;
+    var tagsStr;
+    var updateObj;
+
+    tagsArr = itemObj.tags;
+    console.log(tagsArr.length);
+
+    adminTagExists = tagsArr.indexOf(config.adminKeyword);
+    if (adminTagExists === -1) {
+      tagsArr.push(config.adminKeyword);
+    };
+
+    console.log(tagsArr.length);
+
+    tagsStr = tagsArr.toString();
+    updateItemUrl = window.location.protocol + "//" + portal.getBaseUrl() + "/sharing/rest/content/users/" + itemObj.owner + "/items/" + itemId + "/update?f=json";
+    updateObj = { thumbnailUrl: config.adminThumbnailUrl, tags: tagsStr };
+    doUpdateItemInfo(updateItemUrl, updateObj);
+  };
+
+  function doUpdateItemInfo(updateItemUrl, updateObj) {
+    var updateReq = esriRequest({
+        url: updateItemUrl,
+        content: updateObj
+      }, {
+        usePost: true
+      }).then(function (result) {
+        //success
+        console.log(result);
+      }, function (err) {
+        //fail silently
+    });
+  };
+  
 
 
   return portal;
