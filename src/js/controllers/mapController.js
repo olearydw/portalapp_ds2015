@@ -63,7 +63,7 @@
     itemExtentCenterSym = maputils.getItemExtentCenterSymbol();
 
 
-    itemPopupUpWindow = maputils.getItemInfoWindow();
+    itemPopupWindow = maputils.getItemInfoWindow();
 
 
     itemExtentCenterLayerDefinition = maputils.getItemExtentCenterLayerDefinition();
@@ -71,8 +71,14 @@
     itemExtentCenterFeatureCollection.layerDefinition = itemExtentCenterLayerDefinition;
     itemExtentCenterFeatureLayer = new FeatureLayer(itemExtentCenterFeatureCollection, {
       id: "itemCenterLayer",
-      infoTemplate: itemPopupUpWindow
+      infoTemplate: itemPopupWindow
     });
+
+    on(itemExtentCenterFeatureLayer, "click", function (evt) {
+      console.log(evt.graphic);
+      itemsMap.infoWindow.setFeatures([evt.graphic]);
+    })
+
   };
 
   map.addExtentsToMap = function (extentsArr) {
@@ -89,6 +95,15 @@
       itemCenterPointGraphic.setSymbol(itemExtentCenterSym);
       var itemAttr = {};
       itemAttr.displayName = item.displayName;
+      itemAttr.title = item.title || "Fake Title";
+      itemAttr.id = item.id;
+      itemAttr.access = item.access;
+      itemAttr.iconUrl = item.iconUrl;
+      itemAttr.name = item.name;
+      itemAttr.numViews = item.numViews;
+      itemAttr.owner = item.owner;
+      itemAttr.thumbnailUrl = item.thumbnailUrl;
+      itemAttr.itemUrl = item.itemUrl;
 
       itemCenterPointGraphic.setAttributes(itemAttr);
 
@@ -98,12 +113,16 @@
 
       /////
       itemExtentCenterFeatureLayer.add(itemCenterPointGraphic);
+
+
     });
 
     //extentsCenterPointGraphicsLayer.setRenderer(heatmapRenderer);
     itemsMap.addLayer(itemExtentGL);
     itemsMap.addLayer(itemExtentCenterFeatureLayer);
     //extentsCenterPointGraphicsLayer.hide();
+
+    console.log(itemExtentCenterFeatureLayer);
   };
 
   map.updateLayerState = function (layerStateObj) {

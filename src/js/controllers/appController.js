@@ -145,7 +145,20 @@
     if (itemsArr.length > 0) {
       array.forEach(itemsArr, function (item) {
         if (item.extent.length === 2) {
-          itemsWithExtentsArr.push({ 'extent': item.extent, 'id': item.id, 'type': item.type, 'access': item.access, 'thumbnailUrl': item.thumbnailUrl });
+          itemsWithExtentsArr.push({
+            'extent': item.extent,
+            'id': item.id,
+            'displayName': item.displayName,
+            'type': item.type,
+            'access': item.access,
+            'iconUrl': item.iconUrl,
+            'itemUrl': item.itemUrl,
+            'name': item.name,
+            'title': item.title,
+            'numViews': item.numViews,
+            'owner': item.owner,
+            'thumbnailUrl': item.thumbnailUrl
+          });
         };
       });
       mapController.addExtentsToMap(itemsWithExtentsArr);
