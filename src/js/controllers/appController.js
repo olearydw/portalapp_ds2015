@@ -31,15 +31,16 @@
           //console.log('PORTAL CREATED');
         });
       };
-
-
     });
+
     doSetEventHandlers();
-    doCreateDayStringValStore(function(val){
+
+    doCreateDayStringValStore(function (val) {
       if (val) {
         doCreatePunchCardDataStoreTemplate();
       };
     });
+
   });
 
   function doSetEventHandlers() {
@@ -62,7 +63,7 @@
       if (loggedIn) {
         var configUrl = modelmodule.getConfigPortalUrl();
         portalController.createPortalObj(configUrl, function (portalObj) {
-          //console.log('PORTAL CREATED');
+          console.log('PORTAL CREATED', portalObj);
         });
       };
 
@@ -353,7 +354,8 @@
         qParams.sortOrder = "asc";
         break;
       case "trendBtn":
-        qParams.q = 'accountid:' + orgId;
+        //qParams.q = 'accountid:' + orgId;
+        qParams.q = "owner: olearydw_dtc",
         qParams.sortField = "numViews";
         qParams.sortOrder = "desc";
         break;
@@ -376,14 +378,10 @@
 
 
   function handleGalleryItemClick(e) {
-    //console.log(e.target.parentElement.id);
-    modelmodule.getThumbnailInfo(e.target.parentElement.id, function (data) {
-      //console.log(data);
+    modelmodule.getItemInfo(e.target.parentElement.id, function (data, itemObj) {
+      portalController.updateItemThumbnail(e.target.parentElement.id, itemObj);
       viewController.doCreateItemGallery(data);
     });
-
-
-    
   };
 
 
