@@ -6,11 +6,10 @@
   "esri/map",
   "esri/arcgis/utils",
 	"esri/layers/GraphicsLayer",
+  "esri/layers/FeatureLayer",
 	"esri/SpatialReference",
   "esri/graphic",
-  "esri/geometry/Geometry",
 	"esri/geometry/Extent",
-	"esri/geometry/Polygon",
 	"esri/symbols/SimpleFillSymbol",
 	"esri/symbols/SimpleLineSymbol",
   "esri/symbols/SimpleMarkerSymbol",
@@ -18,118 +17,117 @@
   "esri/renderers/HeatmapRenderer",
   "esri/styles/heatmap",
 	"esri/layers/ArcGISTiledMapServiceLayer",
-], function (ready, array, on, Color, Map, arcgisUtils, GraphicsLayer, SpatialReference, Graphic, Geometry, Extent, Polygon, SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, PictureMarkerSymbol, HeatmapRenderer, esriStylesHeatmap, ArcGISTiledMapServiceLayer) {
+  "utils/maputils"
+], function (ready, array, on, Color, Map, arcgisUtils, GraphicsLayer, FeatureLayer, SpatialReference, Graphic, Extent, SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, PictureMarkerSymbol, HeatmapRenderer, esriStylesHeatmap, ArcGISTiledMapServiceLayer, maputils) {
 
   var map = {};
   var itemsMap;
   var itemsMapInitExtent;
-  var extentSymbol;
-  var extentsGraphicsLayer = new GraphicsLayer();
-  var extentCenterSymbol;
-  var extentsCenterPointGraphicsLayer = new GraphicsLayer();
   var spatialReference = new SpatialReference({ wkid: 4326 });
-  var heatmapRenderer;
 
-  ready(function () {
-    heatmapRenderer = new HeatmapRenderer({
-      colors: ["rgba(0, 0, 255, 0)", "rgb(0, 0, 255)", "rgb(255, 0, 255)", "rgb(255, 0, 0)"],
-      blurRadius: 12,
-      maxPixelIntensity: 250,
-      minPixelIntensity: 10
-    });
-  });
+  var itemExtentSym;
+  var itemExtentCenterSym;
+
+  var itemExtentGL = new GraphicsLayer();
+  var extentsCenterPointGraphicsLayer = new GraphicsLayer();
+
+
+
+  var itemExtentCenterFeatureLayer;
+  var itemExtentCenterLayerDefinition;
+  var itemExtentCenterFeatureCollection;
+
+  var itemHeatmapFL;
+
+
+  
+  
+  var heatmapRenderer = new HeatmapRenderer();
+
+  //extentsCenterPointGraphicsLayer
+  
 
   map.createMap = function (divId, mapId, callback) {
-    extentSymbol = createExtentSymbol();
-    extentCenterSymbol = createExtentCenterSymbol();
-
     arcgisUtils.createMap(mapId, divId).then(function (response) {
       itemsMapInitExtent = new Extent(response.itemInfo.itemData.baseMap.baseMapLayers[0].resourceInfo.initialExtent);
       itemsMap = response.map;
       itemsMap.setExtent(itemsMapInitExtent);
-      //itemsMap.on("extent-change", extentChangeHandler);
+      mapLoadedHandler();
       callback(true);
     });
 
   };
 
-  function extentChangeHandler(e) {
-    var extent = e.extent, zoomed = e.levelChange;
-  };
+  function mapLoadedHandler() {
+    itemExtentSym = maputils.getItemExtentSymbol();
+    itemExtentCenterSym = maputils.getItemExtentCenterSymbol();
 
-  function createExtentSymbol() {
-    var sls;
-    var sfs;
-    sls = new SimpleLineSymbol('solid', new Color([225, 107, 23]), 0.06);
-    sfs = new SimpleFillSymbol('solid', sls, new Color([225, 107, 23, 0.02]));
-    return sfs;
-  };
 
-  function createExtentCenterSymbol() {
-    /*
-    var pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 10,
-         new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 128, 0]), 4)
-        );
-    
-    var pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE, 10,
-      new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-      new Color([0, 0, 0]), 1),
-      new Color([0, 185, 242])
-    );
-    */
-    var pointSymbol = new PictureMarkerSymbol('../src/assets/img/iMapPin.png', 12, 25);
+    itemPopupUpWindow = maputils.getItemInfoWindow();
 
-    return pointSymbol;
+
+    itemExtentCenterLayerDefinition = maputils.getItemExtentCenterLayerDefinition();
+    itemExtentCenterFeatureCollection = maputils.getItemExtentCenterFeatureCollection();
+    itemExtentCenterFeatureCollection.layerDefinition = itemExtentCenterLayerDefinition;
+    itemExtentCenterFeatureLayer = new FeatureLayer(itemExtentCenterFeatureCollection, {
+      id: "itemCenterLayer",
+      infoTemplate: itemPopupUpWindow
+    });
   };
 
   map.addExtentsToMap = function (extentsArr) {
     array.forEach(extentsArr, function (item) {
-      var xmin = Number(item.extent[0][0]);
-      var ymin = Number(item.extent[0][1]);
-      var xmax = Number(item.extent[1][0]);
-      var ymax = Number(item.extent[1][1]);
+      var itemExtent = maputils.getItemExtent(item.extent);
+      var itemCenterPoint = itemExtent.getCenter();
 
-      var extent = new Extent(xmin, ymin, xmax, ymax, spatialReference);
-      var extentGraphic = new Graphic();
-      extentGraphic.setGeometry(extent);
-      extentGraphic.setSymbol(extentSymbol);
+      var itemExtentGraphic = new Graphic();
+      itemExtentGraphic.setGeometry(itemExtent);
+      itemExtentGraphic.setSymbol(itemExtentSym);
 
-      var centerPt = calcCenterPoint(extent);
-      var extentCenterGraphic = new Graphic(centerPt);
-      //extentCenterGraphic.setGeometry(centerPt);
-      extentCenterGraphic.setSymbol(extentCenterSymbol);
+      var itemCenterPointGraphic = new Graphic(itemCenterPoint);
+      itemCenterPointGraphic.setGeometry(itemCenterPoint);
+      itemCenterPointGraphic.setSymbol(itemExtentCenterSym);
+      var itemAttr = {};
+      itemAttr.displayName = item.displayName;
 
-      extentsGraphicsLayer.add(extentGraphic);
-      extentsCenterPointGraphicsLayer.add(extentCenterGraphic);
+      itemCenterPointGraphic.setAttributes(itemAttr);
+
+      itemExtentGL.add(itemExtentGraphic);
+
+
+
+      /////
+      itemExtentCenterFeatureLayer.add(itemCenterPointGraphic);
     });
 
-    extentsCenterPointGraphicsLayer.setRenderer(heatmapRenderer);
-    itemsMap.addLayer(extentsGraphicsLayer);
-    itemsMap.addLayer(extentsCenterPointGraphicsLayer);
-    extentsCenterPointGraphicsLayer.hide();
+    //extentsCenterPointGraphicsLayer.setRenderer(heatmapRenderer);
+    itemsMap.addLayer(itemExtentGL);
+    itemsMap.addLayer(itemExtentCenterFeatureLayer);
+    //extentsCenterPointGraphicsLayer.hide();
   };
 
   map.updateLayerState = function (layerStateObj) {
     if(layerStateObj.id === "polyLayer"){
       if(layerStateObj.show){
-        extentsGraphicsLayer.show();
+        itemExtentGL.show();
       } else {
-        extentsGraphicsLayer.hide();
+        itemExtentGL.hide();
       }
     } else {
       if(layerStateObj.show){
-        extentsCenterPointGraphicsLayer.show();
+        itemExtentCenterFeatureLayer.show();
       } else {
-        extentsCenterPointGraphicsLayer.hide();
+        itemExtentCenterFeatureLayer.hide();
       }
     }
   };
 
+  /*
   function calcCenterPoint(extentObj) {
     var centerPt = extentObj.getCenter();
     return centerPt;
   };
-
+  */
 
   return map;
 });
