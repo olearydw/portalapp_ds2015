@@ -31,18 +31,22 @@
   var itemExtentGL = new GraphicsLayer();
   var extentsCenterPointGraphicsLayer = new GraphicsLayer();
 
-
-
   var itemExtentCenterFeatureLayer;
   var itemExtentCenterLayerDefinition;
   var itemExtentCenterFeatureCollection;
-
-  var itemHeatmapFL;
-
-
   
+  var itemExtentHeatmapLayerDefinition;
+  var itemExtentHeatmapFeatureCollection;
+  var itemExtentHeatmapFeatureLayer;
   
-  var heatmapRenderer = new HeatmapRenderer();
+  //var heatmapRenderer = new HeatmapRenderer();
+
+  var heatmapRenderer = new HeatmapRenderer({
+    colors: ["rgba(0, 0, 255, 0)", "rgb(0, 0, 255)", "rgb(255, 0, 255)", "rgb(255, 0, 0)"],
+    blurRadius: 12,
+    maxPixelIntensity: 50,
+    minPixelIntensity: 10
+  });
 
   //extentsCenterPointGraphicsLayer
   
@@ -74,6 +78,18 @@
       infoTemplate: itemPopupWindow
     });
 
+    itemExtentHeatmapLayerDefinition = maputils.getItemExtentCenterLayerDefinition();
+    itemExtentHeatmapFeatureCollection = maputils.getItemExtentCenterFeatureCollection();
+    itemExtentHeatmapFeatureCollection.layerDefinition = itemExtentHeatmapLayerDefinition;
+
+    //console.log(itemExtentHeatmapLayerDefinition);
+    //console.log(itemExtentHeatmapFeatureCollection);
+
+    itemExtentHeatmapFeatureLayer = new FeatureLayer(itemExtentHeatmapFeatureCollection, {
+      id: "itemHeatmapLayer"
+    });
+
+
     on(itemExtentCenterFeatureLayer, "click", function (evt) {
       console.log(evt.graphic);
       itemsMap.infoWindow.setFeatures([evt.graphic]);
@@ -85,6 +101,9 @@
     array.forEach(extentsArr, function (item) {
       var itemExtent = maputils.getItemExtent(item.extent);
       var itemCenterPoint = itemExtent.getCenter();
+
+      var itemHeatmapLayerGraphic = new Graphic();
+      itemHeatmapLayerGraphic.setGeometry(itemCenterPoint);
 
       var itemExtentGraphic = new Graphic();
       itemExtentGraphic.setGeometry(itemExtent);
@@ -103,23 +122,21 @@
       itemAttr.numViews = item.numViews;
       itemAttr.owner = item.owner;
       itemAttr.thumbnailUrl = item.thumbnailUrl;
-      itemAttr.itemUrl = item.itemUrl;
+      //itemAttr.itemUrl = item.itemUrl;
+      itemAttr.itemUrl = "http://foobar.com";
 
       itemCenterPointGraphic.setAttributes(itemAttr);
 
       itemExtentGL.add(itemExtentGraphic);
-
-
-
-      /////
       itemExtentCenterFeatureLayer.add(itemCenterPointGraphic);
-
+      itemExtentHeatmapFeatureLayer.add(itemHeatmapLayerGraphic);
 
     });
 
-    //extentsCenterPointGraphicsLayer.setRenderer(heatmapRenderer);
+    itemExtentHeatmapFeatureLayer.setRenderer(heatmapRenderer);
     itemsMap.addLayer(itemExtentGL);
     itemsMap.addLayer(itemExtentCenterFeatureLayer);
+    itemsMap.addLayer(itemExtentHeatmapFeatureLayer);
     //extentsCenterPointGraphicsLayer.hide();
 
     console.log(itemExtentCenterFeatureLayer);
