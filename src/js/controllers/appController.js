@@ -47,12 +47,9 @@
     on(dom.byId("signInBtn"), "click", handleSignIn);
     on(dom.byId("signOutBtn"), "click", handleSignOut);
     on(dom.byId("navButtons"), "click", handleNavClick);
-    on(dom.byId("polyLayer"), "click", handleLayerInputClick);
-    on(dom.byId("pointLayer"), "click", handleLayerInputClick);
     on(dom.byId("btnGrpDiv"), "click", handleItemsViewBtnClick);
     on(dom.byId("itemGallery"), "click", handleGalleryItemClick);
-
-    handleGalleryItemClick
+    on(dom.byId("layerStateDiv"), "click", handleLayerInputClick);
   };
 
 
@@ -275,10 +272,7 @@
   };
 
   function handleActiveViewCreation(divId) {
-    //console.log(divId);
     if (divId === "itemGalleryContainer") {
-      //getUserItems();
-
     } else if (divId === "punchCardContainer") {
       getItemsForPunchCard();
     } else if (divId === "tagMgrContainer") {
@@ -324,9 +318,11 @@
 
   function handleLayerInputClick(e) {
     var layerStateObj = {};
-    layerStateObj.id = e.target.id;
-    layerStateObj.show = e.target.checked;
-    mapController.updateLayerState(layerStateObj);
+    if (e.target.id && e.target.id !== "layerStateDiv") {
+      layerStateObj.id = e.target.id;
+      layerStateObj.show = e.target.checked;
+      mapController.updateLayerState(layerStateObj);
+    };
   };
 
   function handleItemsViewBtnClick(e) {

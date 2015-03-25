@@ -110,6 +110,15 @@
    padding: 0;
   }
 
+  .layerStateDiv{
+    margin-top: 30px;
+    
+  }
+
+  .layerStateDiv label{
+    font-weight: normal;
+  }
+
   .brandImg img{
     margin-top: -10px;
     height: 40px;
