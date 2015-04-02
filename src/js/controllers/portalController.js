@@ -114,20 +114,26 @@
     var tagsStr;
     var updateObj;
 
+    //console.log('ITEM OBJ', itemObj);
+
+    var folderId = doCheckItemFolderInfo(itemObj.id);
+    console.log('FOLDER ID', folderId);
+
+
     tagsArr = itemObj.tags;
-    console.log(tagsArr.length);
+    //console.log(tagsArr.length);
 
     adminTagExists = tagsArr.indexOf(config.adminKeyword);
     if (adminTagExists === -1) {
       tagsArr.push(config.adminKeyword);
     };
 
-    console.log(tagsArr.length);
+    //console.log(tagsArr.length);
 
     tagsStr = tagsArr.toString();
     updateItemUrl = window.location.protocol + "//" + portal.getBaseUrl() + "/sharing/rest/content/users/" + itemObj.owner + "/items/" + itemId + "/update?f=json";
     updateObj = { thumbnailUrl: config.adminThumbnailUrl, tags: tagsStr };
-    doUpdateItemInfo(updateItemUrl, updateObj);
+    //doUpdateItemInfo(updateItemUrl, updateObj);
   };
 
   function doUpdateItemInfo(updateItemUrl, updateObj) {
@@ -143,6 +149,29 @@
         //fail silently
     });
   };
+
+  function doCheckItemFolderInfo(itemId) {
+
+    //sharing/rest/content/items/:itemId
+    var qParams = {
+      f: 'json'
+    };
+
+    var url = window.location.protocol + "//" + portal.getBaseUrl() + "/sharing/rest/content/items/" + itemId;
+
+    var getFolderInfo = esriRequest({
+      url: url,
+      content: qParams
+    }).then(function (result) {
+      console.log(result.ownerFolder);
+      return result.ownerFolder;
+    }, function (err) {
+      //fail silently
+    });
+
+    
+    
+  }
   
 
 
