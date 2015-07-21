@@ -12,9 +12,6 @@
   var pObj;
   var p;
 
-
-
-
   ready(function () {
     //console.log('portal module ready');
   });
